@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2E8D8;color:#241914;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#A85F45}a:hover{color:#241914}
+section[id]{scroll-margin-top:72px}
+</style>
+</helmet>
+
+<div style="overflow-x:hidden">
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:40;background:{{ navBg }};border-bottom:1px solid {{ navBorder }};transition:background .3s,border-color .3s">
+    <div style="max-width:1240px;margin:0 auto;height:68px;padding:0 clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <a href="#inicio" style="font-family:'Instrument Serif',serif;font-size:22px;letter-spacing:.12em;text-transform:uppercase;color:#F2E8D8;text-decoration:none;white-space:nowrap">F. Muñoz</a>
+      <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:32px">
+          <sc-for list="{{ links }}" as="l" hint-placeholder-count="5">
+            <a href="{{ l.href }}" style="color:#E6D9C3;text-decoration:none;font-size:14px;letter-spacing:.02em;white-space:nowrap" style-hover="color:#C99A5A">{{ l.label }}</a>
+          </sc-for>
+          <a href="#contacto" style="height:40px;padding:0 20px;display:flex;align-items:center;background:#A85F45;color:#F2E8D8;text-decoration:none;font-size:14px;font-weight:500;border-radius:2px;white-space:nowrap" style-hover="background:#8E4C35;color:#F2E8D8">Conversemos</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ toggleMenu }}" aria-label="Menú" aria-expanded="{{ menuOpen }}" style="width:44px;height:44px;border:1px solid rgba(242,232,216,.35);background:transparent;color:#F2E8D8;border-radius:2px;cursor:pointer;font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.1em">{{ menuIcon }}</button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ showMobileMenu }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#241914;border-top:1px solid rgba(242,232,216,.12);padding:8px clamp(20px,4vw,48px) 20px;display:flex;flex-direction:column">
+        <sc-for list="{{ links }}" as="l" hint-placeholder-count="5">
+          <a href="{{ l.href }}" onClick="{{ closeMenu }}" style="height:52px;display:flex;align-items:center;justify-content:space-between;color:#F2E8D8;text-decoration:none;font-family:'Instrument Serif',serif;font-size:24px;border-bottom:1px solid rgba(242,232,216,.12)">{{ l.label }}<span style="font:11px 'IBM Plex Mono',monospace;color:#C99A5A">{{ l.num }}</span></a>
+        </sc-for>
+        <a href="#contacto" onClick="{{ closeMenu }}" style="margin-top:16px;height:52px;display:flex;align-items:center;justify-content:center;background:#A85F45;color:#F2E8D8;text-decoration:none;font-weight:500;border-radius:2px">Conversemos</a>
+      </div>
+    </sc-if>
+  </nav>
+
+  <section id="inicio" style="background:#241914;color:#F2E8D8;padding:clamp(120px,14vw,168px) clamp(20px,4vw,48px) clamp(64px,8vw,104px);position:relative">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(40px,6vw,80px);align-items:center">
+      <div>
+        <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#C99A5A;margin:0 0 28px">CHOCOLATERO · PASTELERO · SANTIAGO DE CHILE</p>
+        <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(56px,8.5vw,112px);line-height:.92;letter-spacing:-.02em;margin:0">Francisco<br>Muñoz <em style="color:#C99A5A">Urbina</em></h1>
+        <p style="font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(24px,2.6vw,32px);line-height:1.25;margin:32px 0 0;max-width:22ch;color:#E6D9C3">“El chocolate también puede contar historias.”</p>
+        <p style="font-size:17px;line-height:1.65;max-width:52ch;margin:20px 0 0;color:#C9BBA6;text-wrap:pretty">Trabaja el cacao como un material técnico y vivo: temperatura, cristalización, fórmula y tiempo. De ese rigor nace algo simple, un bocado que da calma y reúne a la gente alrededor de una mesa.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:40px">
+          <a href="#creaciones" style="height:52px;padding:0 28px;display:flex;align-items:center;background:#A85F45;color:#F2E8D8;text-decoration:none;font-weight:500;border-radius:2px" style-hover="background:#8E4C35;color:#F2E8D8">Ver creaciones</a>
+          <a href="#trayectoria" style="height:52px;padding:0 28px;display:flex;align-items:center;border:1px solid rgba(242,232,216,.4);color:#F2E8D8;text-decoration:none;font-weight:500;border-radius:2px" style-hover="border-color:#C99A5A;color:#C99A5A">Trayectoria</a>
+        </div>
+      </div>
+      <figure style="margin:0;position:relative">
+        <div style="aspect-ratio:4/5;background:#3A241D;overflow:hidden;border-radius:2px">
+          <img src="https://raw.githubusercontent.com/NemiMorales/fran-portafolio/refs/heads/main/portafolio/static/portafolio/img/bombon-detalle.jpg" alt="Bombón de chocolate amargo, detalle" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+        <figcaption style="position:absolute;left:-1px;bottom:24px;background:#F2E8D8;color:#241914;padding:16px 20px;max-width:260px">
+          <span style="display:block;font:500 10px 'IBM Plex Mono',monospace;letter-spacing:.22em;color:#A85F45;margin-bottom:6px">ACTUALMENTE</span>
+          <span style="font-family:'Instrument Serif',serif;font-size:20px;line-height:1.15">Chef ejecutivo en LOVA Chocolates</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="filosofia" style="padding:clamp(80px,10vw,136px) clamp(20px,4vw,48px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,6vw,96px);align-items:start">
+        <div>
+          <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#A85F45;margin:0 0 20px">01 · FILOSOFÍA</p>
+          <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(44px,5.6vw,72px);line-height:1;letter-spacing:-.015em;margin:0">Un ingrediente de <em>contrastes.</em></h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;padding-top:8px">
+          <p style="font-size:18px;line-height:1.7;margin:0;color:#3A241D;text-wrap:pretty">El chocolate es exigente. Pide medir, esperar, corregir la curva de temperatura y aceptar que un grado de más arruina el trabajo de una mañana. Es química antes que postre.</p>
+          <p style="font-size:18px;line-height:1.7;margin:0;color:#3A241D;text-wrap:pretty">Y sin embargo el resultado hace lo contrario de lo que costó: relaja, alegra, se comparte. Ahí está el oficio de Francisco, en sostener las dos cosas al mismo tiempo.</p>
+        </div>
+      </div>
+      <ul style="list-style:none;margin:clamp(48px,6vw,80px) 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));border-top:1px solid #241914">
+        <sc-for list="{{ contrastes }}" as="c" hint-placeholder-count="4">
+          <li style="padding:28px 24px 28px 0;border-bottom:1px solid #D9CAB2">
+            <span style="display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.22em;color:#A85F45;margin-bottom:10px">{{ c.a }}</span>
+            <span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:30px;line-height:1.1">{{ c.b }}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+
+  <section id="especialidades" style="background:#3A241D;color:#F2E8D8;padding:clamp(80px,10vw,136px) clamp(20px,4vw,48px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:56px">
+        <div>
+          <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#C99A5A;margin:0 0 20px">02 · ESPECIALIDADES</p>
+          <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1;margin:0">Lo que domina el oficio</h2>
+        </div>
+        <p style="font-size:16px;line-height:1.6;max-width:38ch;margin:0;color:#C9BBA6">Del templado a la planilla de costos: técnica de cocina y gestión de producto en la misma persona.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1px;background:rgba(242,232,216,.16);border:1px solid rgba(242,232,216,.16)">
+        <sc-for list="{{ especialidades }}" as="esp" hint-placeholder-count="6">
+          <article style="background:#3A241D;padding:36px 32px 40px;transition:background .25s" style-hover="background:#43291F">
+            <span style="font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.2em;color:#C99A5A">{{ esp.num }}</span>
+            <h3 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:30px;line-height:1.1;margin:20px 0 12px">{{ esp.titulo }}</h3>
+            <p style="font-size:15px;line-height:1.65;margin:0;color:#C9BBA6;text-wrap:pretty">{{ esp.texto }}</p>
+          </article>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="creaciones" style="padding:clamp(80px,10vw,136px) clamp(20px,4vw,48px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#A85F45;margin:0 0 20px">03 · CREACIONES</p>
+      <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1;margin:0 0 56px">Piezas de autor, hechas a mano.</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(20px,3vw,40px)">
+        <sc-for list="{{ creaciones }}" as="obra" hint-placeholder-count="3">
+          <article style="display:flex;flex-direction:column">
+            <figure style="margin:0;aspect-ratio:4/5;background-color:#3A241D;background-image:repeating-linear-gradient(115deg,rgba(242,232,216,.07) 0 2px,transparent 2px 14px);overflow:hidden;border-radius:2px;display:flex;align-items:center;justify-content:center;position:relative">
+              <sc-if value="{{ obra.imagen }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ obra.imagen }}" alt="{{ obra.nombre }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+              </sc-if>
+              <figcaption style="font:11px 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,232,216,.55)">{{ obra.alt }}</figcaption>
+            </figure>
+            <div style="padding-top:20px;border-bottom:1px solid #D9CAB2;padding-bottom:24px;flex:1">
+              <p style="font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#A85F45;margin:0 0 10px">{{ obra.categoria }}</p>
+              <h3 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:30px;line-height:1.1;margin:0 0 10px">{{ obra.nombre }}</h3>
+              <p style="font-size:15px;line-height:1.6;margin:0;color:#5A4638;text-wrap:pretty">{{ obra.descripcion }}</p>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ mostrarLogros }}" hint-placeholder-val="{{ true }}">
+    <section style="background:#465447;color:#F2E8D8;padding:clamp(64px,8vw,96px) clamp(20px,4vw,48px)">
+      <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:40px">
+        <sc-for list="{{ logros }}" as="logro" hint-placeholder-count="3">
+          <div style="border-top:1px solid rgba(242,232,216,.4);padding-top:20px">
+            <p style="font-family:'Instrument Serif',serif;font-size:clamp(64px,7vw,88px);line-height:1;margin:0">{{ logro.valor }}</p>
+            <p style="font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.22em;text-transform:uppercase;margin:16px 0 8px;color:#E3C48F">{{ logro.etiqueta }}</p>
+            <p style="font-size:15px;line-height:1.55;margin:0;color:#E6D9C3">{{ logro.detalle }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-if>
+
+  <section id="trayectoria" style="padding:clamp(80px,10vw,136px) clamp(20px,4vw,48px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#A85F45;margin:0 0 20px">04 · TRAYECTORIA</p>
+      <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1;margin:0 0 56px">Cocinas donde se formó el oficio</h2>
+      <ol style="list-style:none;margin:0;padding:0;border-top:1px solid #241914">
+        <sc-for list="{{ experiencia }}" as="job" hint-placeholder-count="4">
+          <li style="border-bottom:1px solid #D9CAB2;padding:32px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 40px;align-items:baseline">
+            <span style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.18em;color:#A85F45">{{ job.periodo }}</span>
+            <div>
+              <h3 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;line-height:1.05;margin:0">{{ job.lugar }}</h3>
+              <p style="font-size:15px;margin:6px 0 0;color:#3A241D;font-weight:500">{{ job.cargo }}</p>
+            </div>
+            <p style="font-size:15px;line-height:1.6;margin:0;color:#5A4638;text-wrap:pretty">{{ job.detalle }}</p>
+          </li>
+        </sc-for>
+      </ol>
+      <p style="font:12px 'IBM Plex Mono',monospace;line-height:2;letter-spacing:.14em;text-transform:uppercase;color:#7A6352;margin:24px 0 0">También: Pastelería Sinfonía · Wenger Haus · Giser S.A. · Testardos Pizza · 99 Restaurante</p>
+    </div>
+  </section>
+
+  <section id="formacion" style="background:#3A241D;color:#F2E8D8;padding:clamp(80px,10vw,120px) clamp(20px,4vw,48px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(40px,6vw,96px);align-items:start">
+      <div>
+        <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#C99A5A;margin:0 0 20px">05 · FORMACIÓN</p>
+        <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1;margin:0">Cocina, laboratorio <em>y código.</em></h2>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:32px">
+          <sc-for list="{{ skills }}" as="s" hint-placeholder-count="6">
+            <span style="height:34px;padding:0 14px;display:flex;align-items:center;border:1px solid rgba(242,232,216,.3);border-radius:999px;font:12px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#E6D9C3">{{ s }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <ul style="list-style:none;margin:0;padding:0;border-top:1px solid rgba(242,232,216,.3)">
+        <sc-for list="{{ formacion }}" as="est" hint-placeholder-count="3">
+          <li style="padding:24px 0;border-bottom:1px solid rgba(242,232,216,.16)">
+            <p style="font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#C99A5A;margin:0 0 8px">{{ est.tipo }}</p>
+            <p style="font-family:'Instrument Serif',serif;font-size:28px;margin:0;line-height:1.15">{{ est.titulo }}</p>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contacto" style="padding:clamp(96px,12vw,160px) clamp(20px,4vw,48px);text-align:center">
+    <div style="max-width:860px;margin:0 auto">
+      <p style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.28em;color:#A85F45;margin:0 0 24px">06 · CONTACTO</p>
+      <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(44px,6.4vw,84px);line-height:1;letter-spacing:-.015em;margin:0;text-wrap:balance">Toda buena mesa empieza con una <em style="color:#A85F45">conversación.</em></h2>
+      <p style="font-size:18px;line-height:1.65;max-width:50ch;margin:28px auto 0;color:#3A241D;text-wrap:pretty">Colaboraciones, desarrollo de producto, asesorías de chocolatería y proyectos de pastelería. Escribir es el primer paso.</p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:40px">
+        <a href="#" style="height:56px;padding:0 32px;display:flex;align-items:center;background:#241914;color:#F2E8D8;text-decoration:none;font-weight:500;border-radius:2px" style-hover="background:#A85F45;color:#F2E8D8">Escribir un correo</a>
+        <a href="#" style="height:56px;padding:0 28px;display:flex;align-items:center;border:1px solid #241914;color:#241914;text-decoration:none;font-weight:500;border-radius:2px" style-hover="background:#241914;color:#F2E8D8">Instagram</a>
+        <a href="#" style="height:56px;padding:0 28px;display:flex;align-items:center;border:1px solid #241914;color:#241914;text-decoration:none;font-weight:500;border-radius:2px" style-hover="background:#241914;color:#F2E8D8">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background:#241914;color:#C9BBA6;padding:32px clamp(20px,4vw,48px)">
+    <div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;align-items:baseline">
+      <span style="font-family:'Instrument Serif',serif;font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#F2E8D8">Francisco Muñoz Urbina</span>
+      <span style="font-size:14px">Chef ejecutivo y maestro chocolatero · Santiago, Chile</span>
+      <span style="font:12px 'IBM Plex Mono',monospace;letter-spacing:.2em">© 2026</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;mostrarLogros&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const IMG = 'https://raw.githubusercontent.com/NemiMorales/fran-portafolio/refs/heads/main/portafolio/static/portafolio/img/bombon-detalle.jpg';
+class Component extends DCLogic {
+  state = { w: typeof window !== 'undefined' ? window.innerWidth : 1200, scrolled: false, menuOpen: false };
+  componentDidMount() {
+    this.onResize = () => this.setState({ w: window.innerWidth, menuOpen: window.innerWidth < 900 && this.state.menuOpen });
+    this.onScroll = () => { const s = window.scrollY > 40; if (s !== this.state.scrolled) this.setState({ scrolled: s }); };
+    this.onKey = (e) => { if (e.key === 'Escape') this.setState({ menuOpen: false }); };
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('keydown', this.onKey);
+    this.onScroll();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('keydown', this.onKey);
+  }
+  renderVals() {
+    const { w, scrolled, menuOpen } = this.state;
+    const mobile = w < 900;
+    const solid = scrolled || menuOpen;
+    return {
+      desktop: !mobile, mobile, menuOpen, showMobileMenu: mobile && menuOpen,
+      menuIcon: menuOpen ? 'CERRAR' : 'MENÚ',
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      navBg: solid ? 'rgba(36,25,20,.97)' : 'transparent',
+      navBorder: solid ? 'rgba(242,232,216,.12)' : 'transparent',
+      mostrarLogros: this.props.mostrarLogros ?? true,
+      links: [['#filosofia', 'Filosofía'], ['#especialidades', 'Especialidades'], ['#creaciones', 'Creaciones'], ['#trayectoria', 'Trayectoria'], ['#formacion', 'Formación']].map(([href, label], i) => ({ href, label, num: '0' + (i + 1) })),
+      contrastes: [
+        { a: 'TÉCNICO', b: 'pero emocional' }, { a: 'ARTESANAL', b: 'pero contemporáneo' },
+        { a: 'DE NICHO', b: 'pero social' }, { a: 'ENDÉMICO', b: 'pero moderno' },
+      ],
+      especialidades: [
+        { titulo: 'Chocolatería premium', texto: 'Templado, cristalización y acabado de bombonería fina con estándar de producción constante.' },
+        { titulo: 'Desarrollo de productos', texto: 'De la idea al producto vendible: concepto, muestras, escalado y costeo.' },
+        { titulo: 'Formulación de recetas', texto: 'Balance de grasas, azúcares y humedad; recetas replicables y estables en el tiempo.' },
+        { titulo: 'Pastelería', texto: 'Repostería de vitrina y de carta, con técnica clásica y lectura contemporánea.' },
+        { titulo: 'Control de calidad', texto: 'Fichas técnicas, mermas, trazabilidad y revisión sensorial de cada lote.' },
+        { titulo: 'Liderazgo de equipos', texto: 'Organización de partidas, formación técnica y ritmo de trabajo en cocina.' },
+      ].map((e, i) => ({ ...e, num: '0' + (i + 1) })),
+      creaciones: [
+        { nombre: 'Bombón de chocolate amargo', categoria: 'Bombones de autor', descripcion: 'Bombón elaborado con chocolate de alta calidad', imagen: IMG, alt: '' },
+        { nombre: 'Barras artesanales', categoria: 'Producto', descripcion: 'Formatos propios, inclusiones y perfiles de tueste distintos.', imagen: '', alt: 'imagen · barras de chocolate' },
+        { nombre: 'Decoraciones para cafetería', categoria: 'Vitrina', descripcion: 'Piezas de chocolate pensadas para acompañar carta y vitrina.', imagen: '', alt: 'imagen · decoración de vitrina' },
+      ],
+      logros: [
+        { valor: '+13%', etiqueta: 'Aumento de ventas', detalle: 'Contribución medida al crecimiento comercial.' },
+        { valor: '−28%', etiqueta: 'Tiempos de entrega', detalle: 'Reducción en despachos a clientes corporativos.' },
+        { valor: '10+', etiqueta: 'Años en cocina', detalle: 'Experiencia gastronómica acumulada.' },
+      ],
+      experiencia: [
+        { lugar: 'LOVA Chocolates', cargo: 'Chef Ejecutivo', periodo: 'MAYO 2025 — ACTUALIDAD', detalle: 'Chocolatería premium, desarrollo de productos, costeo y liderazgo de equipo.' },
+        { lugar: 'Café Mirandes', cargo: 'Chef Ejecutivo y Maestro Pastelero', periodo: '2022 — 2023', detalle: 'Carta de pastelería, decoraciones de chocolate y operación diaria.' },
+        { lugar: 'Otten S.A.', cargo: 'Ayudante de producción y Chocolatero', periodo: '2019 — 2020', detalle: 'Producción, control de calidad y formulación en planta.' },
+        { lugar: 'CIG Boragó', cargo: 'Pastelero', periodo: '2019', detalle: 'Pastelería de alta cocina y trabajo con ingredientes endémicos.' },
+      ],
+      skills: ['Inglés C1', 'Portugués en curso', 'SQL', 'JavaScript', 'HTML', 'Excel'],
+      formacion: [
+        { tipo: 'Carrera', titulo: 'Administración Gastronómica Internacional' },
+        { tipo: 'Técnico', titulo: 'Programación y Análisis de Sistemas' },
+        { tipo: 'Especialización', titulo: 'Chocolatería y Templado' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

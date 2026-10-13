@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2E8D8;color:#241914;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#A85F45}a:hover{color:#241914}
+*{box-sizing:border-box}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <header style="background:#241914;color:#F2E8D8;padding:0 clamp(20px,4vw,48px);height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:14px;min-width:0">
+      <span style="font-family:'Instrument Serif',serif;font-size:24px;white-space:nowrap">Francisco Muñoz</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#C99A5A">Panel</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:14px">
+      <span style="color:#C9BBA6">Sesión iniciada como: <strong style="color:#F2E8D8;font-weight:500">noemi</strong></span>
+      <a href="#" style="color:#F2E8D8;text-decoration:none;border-bottom:1px solid #C99A5A;padding-bottom:2px" style-hover="color:#C99A5A">Cerrar sesión</a>
+    </div>
+  </header>
+
+  <main style="flex:1;width:100%;max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,64px) clamp(20px,4vw,48px)">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:36px">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8A6A3E;margin-bottom:10px">Portafolio · Administración</div>
+        <h1 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,6vw,64px);line-height:1">Gestión de creaciones</h1>
+      </div>
+      <button onClick="{{ openAdd }}" style="background:#A85F45;color:#F2E8D8;border:0;border-radius:2px;padding:0 24px;height:48px;font:500 15px Archivo,sans-serif;cursor:pointer;display:flex;align-items:center;gap:10px" style-hover="background:#8E4C35">
+        <span style="font-size:20px;line-height:1">+</span>Agregar nueva creación
+      </button>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+        <button onClick="{{ f.onClick }}" style="height:36px;padding:0 16px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }};font:500 13px Archivo,sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px">
+          {{ f.label }}<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.75">{{ f.count }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="border-top:1px solid #241914">
+      <sc-for list="{{ visible }}" as="item" hint-placeholder-count="2">
+        <article style="display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid #D9CAB2;opacity:{{ item.opacity }}">
+          <div style="width:96px;height:96px;background:#3A241D;overflow:hidden;border-radius:2px">
+            <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width:100%;height:100%;object-fit:cover;display:block">
+          </div>
+          <div style="min-width:0">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:6px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8A6A3E">{{ item.categoria }}</span>
+              <span style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:{{ item.estadoColor }}">
+                <span style="width:7px;height:7px;border-radius:50%;background:{{ item.estadoColor }}"></span>{{ item.estado }}
+              </span>
+            </div>
+            <h2 style="margin:0 0 6px;font-family:'Instrument Serif',serif;font-weight:400;font-size:28px;line-height:1.1">{{ item.nombre }}</h2>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5A4638;text-wrap:pretty">{{ item.descripcion }}</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+            <button onClick="{{ item.onEdit }}" style="height:40px;padding:0 18px;background:transparent;border:1px solid #241914;color:#241914;border-radius:2px;font:500 14px Archivo,sans-serif;cursor:pointer" style-hover="background:#241914;color:#F2E8D8">Editar</button>
+            <button onClick="{{ item.onToggle }}" style="height:40px;padding:0 18px;background:transparent;border:1px solid transparent;color:#A85F45;border-radius:2px;font:500 14px Archivo,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px" style-hover="color:#241914">{{ item.toggleLabel }}</button>
+          </div>
+        </article>
+      </sc-for>
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <p style="padding:48px 0;text-align:center;color:#8A6A3E;font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;margin:0">No hay creaciones en esta vista.</p>
+      </sc-if>
+    </div>
+  </main>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed;inset:0;background:rgba(36,25,20,.72);display:flex;align-items:flex-start;justify-content:center;padding:32px 20px;z-index:50;overflow-y:auto">
+      <form onClick="{{ stop }}" onSubmit="{{ save }}" style="background:#F2E8D8;width:100%;max-width:560px;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.35);margin:auto">
+        <div style="padding:28px 32px 20px;border-bottom:1px solid #D9CAB2;display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8A6A3E;margin-bottom:8px">{{ modalKicker }}</div>
+            <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:38px;line-height:1">{{ modalTitle }}</h2>
+          </div>
+          <button type="button" onClick="{{ closeModal }}" aria-label="Cerrar" style="width:40px;height:40px;border:0;background:transparent;font-size:26px;line-height:1;color:#241914;cursor:pointer;border-radius:2px" style-hover="background:#E6D9C3">×</button>
+        </div>
+
+        <div style="padding:24px 32px;display:flex;flex-direction:column;gap:18px">
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:600">Nombre</span>
+            <input value="{{ form.nombre }}" onChange="{{ setNombre }}" required placeholder="Ej. Bombón de chocolate amargo" style="height:46px;padding:0 14px;border:1px solid #BFAE93;background:#FBF6EE;border-radius:2px;font:15px Archivo,sans-serif;color:#241914;outline:none" style-focus="border-color:#A85F45;box-shadow:0 0 0 3px rgba(168,95,69,.18)">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:600">Categoría</span>
+            <select value="{{ form.categoria }}" onChange="{{ setCategoria }}" required style="height:46px;padding:0 12px;border:1px solid #BFAE93;background:#FBF6EE;border-radius:2px;font:15px Archivo,sans-serif;color:#241914;outline:none" style-focus="border-color:#A85F45;box-shadow:0 0 0 3px rgba(168,95,69,.18)">
+              <option value="">Selecciona una categoría</option>
+              <option value="Bombones de autor">Bombones de autor</option>
+              <option value="Tabletas de origen">Tabletas de origen</option>
+              <option value="Esculturas en chocolate">Esculturas en chocolate</option>
+              <option value="Postres de restaurante">Postres de restaurante</option>
+              <option value="Pastelería">Pastelería</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:600">Descripción</span>
+            <textarea value="{{ form.descripcion }}" onChange="{{ setDescripcion }}" rows="4" placeholder="Técnica, ingredientes, origen del cacao…" style="padding:12px 14px;border:1px solid #BFAE93;background:#FBF6EE;border-radius:2px;font:15px/1.5 Archivo,sans-serif;color:#241914;outline:none;resize:vertical" style-focus="border-color:#A85F45;box-shadow:0 0 0 3px rgba(168,95,69,.18)"></textarea>
+          </label>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 72px;gap:14px;align-items:end">
+            <label style="display:flex;flex-direction:column;gap:8px;min-width:0">
+              <span style="font-size:13px;font-weight:600">Imagen <span style="font-weight:400;color:#8A6A3E">(URL)</span></span>
+              <input value="{{ form.imagen }}" onChange="{{ setImagen }}" placeholder="https://…" style="height:46px;padding:0 14px;border:1px solid #BFAE93;background:#FBF6EE;border-radius:2px;font:13px 'IBM Plex Mono',monospace;color:#241914;outline:none" style-focus="border-color:#A85F45;box-shadow:0 0 0 3px rgba(168,95,69,.18)">
+            </label>
+            <div style="width:72px;height:72px;background:#3A241D;border-radius:2px;overflow:hidden">
+              <sc-if value="{{ form.imagen }}" hint-placeholder-val="{{ false }}"><img src="{{ form.imagen }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></sc-if>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:20px 32px 28px;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:12px">
+          <button type="button" onClick="{{ closeModal }}" style="height:48px;padding:0 22px;background:transparent;border:1px solid #241914;color:#241914;border-radius:2px;font:500 15px Archivo,sans-serif;cursor:pointer" style-hover="background:#E6D9C3">Volver al listado</button>
+          <button type="submit" style="height:48px;padding:0 24px;background:#A85F45;border:0;color:#F2E8D8;border-radius:2px;font:500 15px Archivo,sans-serif;cursor:pointer" style-hover="background:#8E4C35">{{ submitLabel }}</button>
+        </div>
+      </form>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;modalInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ninguno&quot;,&quot;agregar&quot;,&quot;editar&quot;],&quot;default&quot;:&quot;ninguno&quot;,&quot;tsType&quot;:&quot;'ninguno'|'agregar'|'editar'&quot;}}">
+const IMG = 'https://raw.githubusercontent.com/NemiMorales/fran-portafolio/refs/heads/main/portafolio/static/portafolio/img/bombon-detalle.jpg';
+const EMPTY = { nombre: '', categoria: '', descripcion: '', imagen: '' };
+class Component extends DCLogic {
+  state = {
+    items: [
+      { id: 1, nombre: 'Bombón de chocolate amargo', categoria: 'Bombones de autor', descripcion: 'Bombón elaborado con chocolate de alta calidad', imagen: IMG, activa: true },
+    ],
+    filter: 'todas', modal: null, editId: null, form: EMPTY,
+  };
+  componentDidMount() {
+    const m = this.props.modalInicial;
+    if (m === 'agregar') this.openAdd();
+    if (m === 'editar') this.openEdit(this.state.items[0]);
+  }
+  componentDidUpdate(p) {
+    if (p.modalInicial !== this.props.modalInicial) {
+      const m = this.props.modalInicial;
+      if (m === 'agregar') this.openAdd(); else if (m === 'editar') this.openEdit(this.state.items[0]); else this.setState({ modal: null });
+    }
+  }
+  openAdd = () => this.setState({ modal: 'add', editId: null, form: EMPTY });
+  openEdit = (it) => it && this.setState({ modal: 'edit', editId: it.id, form: { nombre: it.nombre, categoria: it.categoria, descripcion: it.descripcion, imagen: it.imagen } });
+  field = (k) => (e) => { const v = e.target.value; this.setState(s => ({ form: { ...s.form, [k]: v } })); };
+  save = (e) => {
+    e.preventDefault();
+    this.setState(s => s.modal === 'edit'
+      ? { items: s.items.map(i => i.id === s.editId ? { ...i, ...s.form } : i), modal: null }
+      : { items: [...s.items, { id: Date.now(), ...s.form, activa: true }], modal: null });
+  };
+  renderVals() {
+    const { items, filter, modal, form } = this.state;
+    const cats = ['Bombones de autor', 'Tabletas de origen', 'Esculturas en chocolate', 'Postres de restaurante', 'Pastelería'];
+    const counts = { todas: items.length, activas: items.filter(i => i.activa).length, inactivas: items.filter(i => !i.activa).length };
+    const visible = items.filter(i => filter === 'todas' || (filter === 'activas' ? i.activa : !i.activa));
+    return {
+      filters: [['todas', 'Todas'], ['activas', 'Activas'], ['inactivas', 'Inactivas']].map(([k, label]) => {
+        const on = filter === k;
+        return { label, count: counts[k], onClick: () => this.setState({ filter: k }), bg: on ? '#241914' : 'transparent', color: on ? '#F2E8D8' : '#241914', border: on ? '#241914' : '#BFAE93' };
+      }),
+      visible: visible.map(it => ({
+        ...it,
+        estado: it.activa ? 'Activa' : 'Inactiva',
+        estadoColor: it.activa ? '#465447' : '#8A6A3E',
+        opacity: it.activa ? 1 : 0.6,
+        toggleLabel: it.activa ? 'Desactivar' : 'Activar',
+        onEdit: () => this.openEdit(it),
+        onToggle: () => this.setState(s => ({ items: s.items.map(i => i.id === it.id ? { ...i, activa: !i.activa } : i) })),
+      })),
+      isEmpty: visible.length === 0,
+      categorias: cats,
+      modalOpen: !!modal,
+      modalKicker: modal === 'edit' ? 'Editar' : 'Agregar',
+      modalTitle: modal === 'edit' ? 'Editar creación' : 'Nueva creación',
+      submitLabel: modal === 'edit' ? 'Guardar cambios' : 'Guardar creación',
+      form,
+      openAdd: this.openAdd,
+      closeModal: () => this.setState({ modal: null }),
+      stop: (e) => e.stopPropagation(),
+      save: this.save,
+      setNombre: this.field('nombre'), setCategoria: this.field('categoria'), setDescripcion: this.field('descripcion'), setImagen: this.field('imagen'),
+    };
+  }
+}
+</script>
+</body>
+</html>

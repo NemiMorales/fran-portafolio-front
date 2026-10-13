@@ -1,0 +1,114 @@
+<a class="salto-contenido" href="#contenido">Saltar al contenido</a>
+<header class="navbar">
+  <nav class="navbar__inner" aria-label="Navegación principal">
+    <a class="logo" href="/"><span class="logo__nombre">F. Muñoz</span><span class="logo__oficio">{{ admin() ? 'Panel · Creaciones' : 'Chocolatero / Pastelero' }}</span></a>
+    <button class="menu-toggle" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()" aria-controls="menu-principal">Menú</button>
+    <ul class="menu" id="menu-principal" [attr.data-abierto]="menuOpen()">
+      @if (admin()) { <li><a href="/">Volver al portafolio</a></li> }
+      @else {
+        @for (link of [['filosofia','Filosofía'],['especialidades','Especialidades'],['creaciones','Creaciones'],['trayectoria','Trayectoria'],['contacto','Contacto']]; track link[0]) {
+          <li><a [href]="'#'+link[0]" (click)="menuOpen.set(false)">{{ link[1] }}</a></li>
+        }
+        <li><a href="/gestion">Gestionar</a></li>
+      }
+    </ul>
+  </nav>
+</header>
+@if (admin()) {
+<main class="management" id="contenido">
+    @if (!authenticated()) {
+    <section class="login-panel" aria-labelledby="login-title">
+      <h2 class="titulo-s" id="login-title">Inicia sesión para gestionar creaciones</h2>
+      <p>Usa tu usuario y contraseña de Django. Inicia sesión para agregar, editar o desactivar creaciones.</p>
+      <form #loginForm="ngForm" (ngSubmit)="loginForm.valid && login()">
+        <label>Usuario<input name="username" autocomplete="username" [(ngModel)]="username" required></label>
+        <label>Contraseña<input name="password" type="password" autocomplete="current-password" [(ngModel)]="password" required></label>
+        <button type="submit" class="btn btn--primario" [disabled]="loginPending() || loginForm.invalid">{{ loginPending() ? 'Ingresando…' : 'Iniciar sesión' }}</button>
+      </form>
+      @if (loginError()) { <p role="alert" class="error">{{ loginError() }}</p> }
+    </section>
+  } @else { <div class="session-bar"><span>Sesión iniciada como <strong>{{ username }}</strong></span><button class="text-button" (click)="logout()">Cerrar sesión</button></div> }
+  <div class="management-heading">
+    <div><p class="kicker">Portafolio · Administración</p><h1 class="titulo-l">Gestión de creaciones</h1></div>
+    <button class="btn btn--primario" [disabled]="!authenticated()" (click)="openAdd()">＋ Agregar nueva creación</button>
+  </div>
+  <div class="filters" aria-label="Filtrar creaciones">
+    @for (f of ['todas','activas','inactivas']; track f) {
+      <button [class.selected]="filter() === f" [attr.aria-pressed]="filter() === f" (click)="filter.set(f)">{{ f }} <span>{{ count(f) }}</span></button>
+    }
+  </div>
+  @if (notice()) { <p role="status" class="success">✓ {{ notice() }}</p> }
+  @if (error() && !modal()) { <div role="alert" class="error">{{ error() }} <button (click)="load()">Reintentar</button></div> }
+  @if (loading()) { <p role="status">Cargando creaciones…</p> }
+  @else {
+    <div class="creation-list">
+    @for (item of visible(); track item.id) {
+      <article class="creation-row" [class.inactive]="!item.activo">
+        <div class="thumbnail image-frame">@if (item.imagen) { <img [src]="item.imagen" [alt]="item.nombre" (error)="imageError($event)"> } @else { <span>Sin imagen</span> }</div>
+        <div><p class="row-meta">{{ categoryName(item.categoria) }} <span [class.active]="item.activo">● {{ item.activo ? 'Activa' : 'Inactiva' }}</span></p><h2 class="titulo-s">{{ item.nombre }}</h2><p>{{ item.descripcion }}</p></div>
+        <div class="row-actions"><button class="btn btn--linea-oscura" [disabled]="pending() !== null || !authenticated()" (click)="edit(item)">Editar</button><button class="text-button" [disabled]="pending() !== null || !authenticated()" (click)="toggle(item)">{{ pending() === item.id ? 'Procesando…' : item.activo ? 'Desactivar' : 'Activar' }}</button></div>
+      </article>
+    } @empty { @if (!error()) { <p class="empty">No hay creaciones en esta vista.</p> } }
+    </div>
+  }
+</main>
+} @else {
+<main id="contenido">
+<section class="hero" id="inicio">
+  <div class="hero__trama"></div><div class="hero__halo"></div>
+  <div class="hero__inner">
+    <div><p class="kicker">Santiago de Chile · Maestro chocolatero</p><h1 class="titulo-xl">{{ portfolio.perfil.nombre }}</h1><p class="hero__rol">{{ portfolio.perfil.titulo }}</p><p class="cita hero__frase">“{{ portfolio.perfil.frase }}”</p><p class="hero__texto">{{ portfolio.perfil.descripcion }}</p><div class="grupo-botones"><a class="btn btn--primario" href="#trayectoria">Conocer su trayectoria</a><a class="btn btn--linea" href="#creaciones">Explorar creaciones</a></div></div>
+    <figure class="hero__figura"><div class="hero-photo image-frame"><img [src]="heroImage" alt="Bombón de chocolate amargo, detalle" (error)="imageError($event)"></div><figcaption class="hero-caption"><span class="kicker">Actualmente</span><span>Chef ejecutivo en LOVA Chocolates</span></figcaption></figure>
+  </div>
+</section>
+<section class="seccion" id="filosofia"><div class="contenedor"><p class="kicker">01 · Filosofía</p><div class="editorial"><h2 class="titulo-l">Un ingrediente de <em>contrastes.</em></h2><div><p class="parrafo">El chocolate es exigente. Pide medir, esperar, corregir la curva de temperatura y aceptar que un grado de más arruina el trabajo de una mañana. Es química antes que postre.</p><p class="parrafo">Y sin embargo el resultado hace lo contrario de lo que costó: relaja, alegra, se comparte. Ahí está el oficio de Francisco, en sostener las dos cosas al mismo tiempo.</p></div></div><ul class="contrastes">@for (c of [['Técnico','pero emocional'],['Artesanal','pero contemporáneo'],['De nicho','pero social'],['Endémico','pero moderno']]; track c[0]) { <li><span class="dato">{{ c[0] }}</span><span><em>{{ c[1] }}</em></span></li> }</ul></div></section>
+<section class="seccion seccion--media" id="especialidades"><div class="contenedor"><div class="cabecera-seccion"><p class="kicker">02 · Especialidades</p><h2 class="titulo-m">Lo que domina el oficio</h2></div><div class="rejilla-especialidades">@for (e of portfolio.especialidades; track e.titulo) { <article class="especialidad"><div [class]="'marca marca--'+e.marca" aria-hidden="true"></div><h3 class="titulo-s">{{ e.titulo }}</h3><p>{{ e.texto }}</p></article> }</div></div></section>
+<section class="seccion" id="creaciones"><div class="contenedor"><p class="kicker">03 · Creaciones</p><h2 class="titulo-l section-title">Piezas de autor, hechas a mano.</h2>
+@if (loading()) { <p role="status">Cargando creaciones…</p> }
+@if (error()) { <div class="error" role="alert">{{ error() }} <button (click)="load()">Reintentar</button></div> }
+<div class="rejilla-creaciones">@for (item of activeItems(); track item.id) { <article class="creacion"><div class="card-image image-frame">@if (item.imagen) { <img loading="lazy" [src]="item.imagen" [alt]="item.nombre" (error)="imageError($event)"> } @else { <span>Sin imagen</span> }</div><div class="creacion__cuerpo"><p class="dato creacion__categoria">{{ categoryName(item.categoria) }}</p><h3 class="titulo-s">{{ item.nombre }}</h3><p>{{ item.descripcion }}</p></div></article> } @empty { @if (!loading() && !error()) { <p class="empty">Pronto encontrarás nuevas creaciones aquí.</p> } }</div>
+</div></section>
+<section class="seccion seccion--verde"><div class="contenedor rejilla-logros">@for (l of portfolio.logros; track l.etiqueta) { <div class="logro"><p class="logro__valor">{{ l.valor }}</p><p class="dato logro__etiqueta">{{ l.etiqueta }}</p><p>{{ l.detalle }}</p></div> }</div></section>
+<section class="seccion seccion--oscura" id="trayectoria"><div class="contenedor"><p class="kicker">04 · Trayectoria</p><h2 class="titulo-l section-title">Cocinas donde se formó el oficio</h2><ol class="linea-tiempo">@for (job of portfolio.experiencia; track job.lugar) { <li><span class="trabajo__periodo">{{ job.periodo }}</span><h3 class="trabajo__lugar">{{ job.lugar }}</h3><p class="trabajo__cargo">{{ job.cargo }}</p><p class="trabajo__detalle">{{ job.detalle }}</p></li> }</ol><p class="nota-mono">También: {{ portfolio.otras_experiencias.join(' · ') }}</p></div></section>
+<section class="seccion seccion--media" id="formacion"><div class="contenedor formacion"><div><p class="kicker">05 · Formación</p><h2 class="titulo-m">Cocina, laboratorio y código.</h2><p class="nota-mono">{{ portfolio.idiomas.join(' · ') }}<br>{{ portfolio.herramientas.join(' · ') }}</p></div><ul class="lista-formacion">@for (e of portfolio.formacion; track e.tipo) { <li><p class="dato">{{ e.tipo }}</p><p>{{ e.titulo }}</p></li> }</ul></div></section>
+<section class="contacto" id="contacto"><div class="contacto__halo"></div><div class="contacto__inner"><p class="kicker">06 · Contacto</p><h2 class="contacto__frase">{{ portfolio.contacto.frase_cierre }}</h2><p class="contacto__texto">{{ portfolio.contacto.texto }}</p><div class="grupo-botones"><a class="btn btn--oscuro" href="/assets/curriculum.pdf" target="_blank" rel="noopener">Ver currículum ↗</a></div><p class="contacto__nota">Los canales de contacto estarán disponibles próximamente.</p></div></section>
+</main>
+}
+<footer class="footer"><div class="footer__inner"><div><p class="footer__nombre">Francisco Muñoz Urbina</p><p>Chef ejecutivo y maestro chocolatero · Santiago, Chile</p></div><span class="footer__anio">© 2026</span></div></footer>
+@if (modal()) {
+<dialog aria-labelledby="modal-title" (cancel)="$event.preventDefault(); close()" (click)="$event.target === $event.currentTarget && close()">
+<form #creationForm="ngForm" novalidate (ngSubmit)="submitCreation(creationForm)">
+  <div class="modal-heading"><div><p class="kicker">{{ editId() === null ? 'Agregar' : 'Editar' }}</p><h2 class="titulo-m" id="modal-title">{{ editId() === null ? 'Nueva creación' : 'Editar creación' }}</h2></div><button type="button" class="close" aria-label="Cerrar" [disabled]="saving()" (click)="close()">×</button></div>
+  <div class="form-fields">
+    @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+    <p class="form-help">Completa los campos obligatorios (*). La creación aparecerá en el portafolio si está activa.</p><label>Nombre *<input #nombreField="ngModel" autofocus name="nombre" [(ngModel)]="form.nombre" required maxlength="100" placeholder="Ej. Bombón de chocolate amargo" [attr.aria-invalid]="nombreField.invalid && (nombreField.touched || creationForm.submitted)" aria-describedby="nombre-help"></label><small id="nombre-help" [class.field-error]="nombreField.invalid && (nombreField.touched || creationForm.submitted)">{{ nombreField.invalid && (nombreField.touched || creationForm.submitted) ? "Escribe un nombre de hasta 100 caracteres." : "Hasta 100 caracteres." }}</small>
+        <label>Categoría *
+      <select #categoriaField="ngModel" name="categoria" aria-describedby="categoria-help" [attr.aria-invalid]="categoriaField.invalid && (categoriaField.touched || creationForm.submitted)" [(ngModel)]="form.categoria" required [disabled]="categoriesLoading() || saving() || categories().length === 0">
+        <option [ngValue]="null">{{ categoriesLoading() ? 'Cargando categorías…' : 'Selecciona una categoría' }}</option>
+        @for (category of categories(); track category.id) {
+          <option [ngValue]="category.id">{{ category.nombre }}</option>
+        }
+      </select>
+    </label>
+    <small id="categoria-help" [class.field-error]="categoriaField.invalid && (categoriaField.touched || creationForm.submitted)">{{ categoriaField.invalid && (categoriaField.touched || creationForm.submitted) ? "Selecciona una categoría de la lista." : "Elige el tipo de creación." }}</small>
+    @if (categoriesError()) { <div role="alert" class="error">{{ categoriesError() }} <button type="button" (click)="loadCategories()">Reintentar</button></div> }
+    @else if (!categoriesLoading() && categories().length === 0) { <p role="status">No hay categorías disponibles.</p> }
+    <label>Descripción *<textarea #descripcionField="ngModel" name="descripcion" aria-describedby="descripcion-help" [attr.aria-invalid]="descripcionField.invalid && (descripcionField.touched || creationForm.submitted)" [(ngModel)]="form.descripcion" rows="4" required placeholder="Técnica, ingredientes, origen del cacao…"></textarea></label><small id="descripcion-help" [class.field-error]="descripcionField.invalid && (descripcionField.touched || creationForm.submitted)">{{ descripcionField.invalid && (descripcionField.touched || creationForm.submitted) ? "Escribe una descripción de tu creación." : "Cuenta sus ingredientes, técnica o inspiración." }}</small>
+    <label>Imagen *<input #imagenField="ngModel" name="imagen" aria-describedby="imagen-help" [attr.aria-invalid]="imagenField.invalid && (imagenField.touched || creationForm.submitted)" required maxlength="200" type="url" pattern="https?://.+" [(ngModel)]="form.imagen" placeholder="https://ejemplo.com/foto.jpg"></label><small id="imagen-help" [class.field-error]="imagenField.invalid && (imagenField.touched || creationForm.submitted)">{{ imagenField.invalid && (imagenField.touched || creationForm.submitted) ? "Pega una dirección completa que empiece con http:// o https:// (máximo 200 caracteres)." : "Pega el enlace directo a una foto. La subida desde tu equipo aún no está disponible." }}</small>
+    @if (form.imagen) { <div class="preview image-frame"><img [src]="form.imagen" alt="Vista previa de la creación" (error)="imageError($event)"></div> }
+    <label class="checkbox"><input type="checkbox" name="activo" [(ngModel)]="form.activo"> Visible en el portafolio</label><small>Si desmarcas esta opción, se guardará sin mostrarse al público.</small>
+  </div>
+  @if (!authenticated()) { <p class="error" role="alert">Inicia sesión en el panel para guardar. Cierra este formulario e inicia sesión antes de volver a intentarlo.</p> }
+  <div class="modal-actions">
+    @if (error()) { <p class="save-feedback error" role="alert">{{ error() }}</p> }
+    @if (saving()) { <p class="save-feedback" role="status">Enviando la creación a Django…</p> }
+    <button type="button" class="btn btn--linea-oscura" [disabled]="saving()" (click)="close()">Volver al listado</button><button class="btn btn--primario" type="button" (click)="submitCreation(creationForm)" [disabled]="saving()">{{ saving() ? 'Guardando…' : editId() === null ? 'Guardar creación' : 'Guardar cambios' }}</button></div>
+</form>
+</dialog>
+}
+
+
+
+
+
+
